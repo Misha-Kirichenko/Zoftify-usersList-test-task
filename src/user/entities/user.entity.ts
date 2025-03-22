@@ -2,27 +2,28 @@ import { Role } from 'src/common/enums';
 import {
   Entity,
   PrimaryGeneratedColumn,
-  Column
+  Column,
+  BeforeUpdate
 } from 'typeorm';
 
-@Entity()
+@Entity("users")
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({type: 'varchar', nullable: false })
+  @Column({ type: 'varchar', nullable: false })
   firstName: string;
 
-  @Column({type: 'varchar', nullable: false })
+  @Column({ type: 'varchar', nullable: false })
   lastName: string;
 
-  @Column({type: 'varchar', unique: true, nullable: false })
+  @Column({ type: 'varchar', unique: true, nullable: false })
   email: string;
 
-  @Column({type: 'varchar', nullable: false })
+  @Column({ type: 'varchar', nullable: false })
   password: string;
 
-  @Column({type: 'int', nullable: false, default: 0 })
+  @Column({ type: 'int', nullable: false, default: 0 })
   lastLogin: number;
 
   @Column({
@@ -33,8 +34,11 @@ export class User {
   })
   role: Role;
 
-  set lastLoginInMillis(value: number) {
-    this.lastLogin = Math.floor(value / 1000);
+  @BeforeUpdate()
+  setlastLoginInMillis() {
+    if (this.lastLogin > 9999999999) {
+      this.lastLogin = Math.floor(this.lastLogin / 1000);
+    }
   }
 
   get lastLoginInMillis(): number {

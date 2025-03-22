@@ -1,7 +1,6 @@
 FROM node:lts-slim
 WORKDIR /app
 COPY package*.json ./
-RUN npm ci
+COPY .env .env
 COPY . .
-RUN npm run build
 RUN apt-get update && apt-get install -y wait-for-it

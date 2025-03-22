@@ -20,8 +20,10 @@ export class MigrationService extends AbsctractDatabaseService implements IDatab
   private async executeCommand(query: string, filename: string) {
     try {
       console.log(`Running migration: ${filename}`);
-      await this.conn.query(query);
-      console.log(`Migration ${filename} executed successfully`);
+      const { command } = await this.conn.query(query);
+      if (command) {
+        console.log(`✅ Migration ${filename} executed successfully`);
+      }
     } catch (error) {
       throw new Error(`Error executing migration ${filename}:`, error);
     }

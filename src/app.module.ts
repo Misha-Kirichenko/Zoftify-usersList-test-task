@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { UserModule } from './user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CONFIG } from './db/config';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -10,10 +11,11 @@ import { CONFIG } from './db/config';
       ...CONFIG,
       username: CONFIG.user,
       type: 'postgres',
-      autoLoadEntities: false,
+      autoLoadEntities: true,
       synchronize: false,
       logging: true,
-    })
+    }),
+    AuthModule
   ]
 })
 export class AppModule { }

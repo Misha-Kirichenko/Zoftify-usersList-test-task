@@ -32,7 +32,7 @@ export class SeederService extends AbsctractDatabaseService implements IDatabase
 
         console.log('User seeder executed successfully');
       } else {
-        console.log('Seeder skipped: Test user already exist in the database.');
+        console.log('Seeder skipped: Test users already exist in the database.');
       }
     } catch (error) {
       throw new Error(error);
