@@ -5,7 +5,7 @@ import { AbsctractDatabaseService } from './abstractDatabase.service';
 
 export class MigrationService extends AbsctractDatabaseService implements IDatabaseService {
   public async runAll() {
-    const migrationsPath = path.join(__dirname, '..', 'sql');
+    const migrationsPath = path.join(__dirname, '..', 'sql', 'migrations');
     const files = fs
       .readdirSync(migrationsPath)
       .filter((file) => file.endsWith('.sql'));
@@ -19,13 +19,25 @@ export class MigrationService extends AbsctractDatabaseService implements IDatab
 
   private async executeCommand(query: string, filename: string) {
     try {
-      console.log(`Running migration: ${filename}`);
-      const { command } = await this.conn.query(query);
-      if (command) {
-        console.log(`✅ Migration ${filename} executed successfully`);
+      console.log(`🔃 Running migration: ${filename}`);
+      const migrationInfo = await this.conn.query(query);
+      if (Array.isArray(migrationInfo)) {
+        migrationInfo.forEach((info, index) => {
+          if (info.command) {
+            console.log(`✅ Migration: "${filename}" part ${index + 1}/${migrationInfo.length} executed successfully`);
+          } else {
+            console.log(`➡️ Migration: "${filename}" part ${index + 1}/${migrationInfo.length} skipped.`);
+          }
+        });
+      } else {
+        if (migrationInfo.command) {
+          console.log(`✅ Migration: "${filename}" executed successfully`);
+        } else {
+          console.log(`➡️ Migration: "${filename}" skipped.`);
+        }
       }
     } catch (error) {
-      throw new Error(`Error executing migration ${filename}:`, error);
+      throw new Error(`❌ executing migration "${filename}":`, error);
     }
   }
 

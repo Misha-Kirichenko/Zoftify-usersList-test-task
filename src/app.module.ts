@@ -1,8 +1,9 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CONFIG } from './db/config';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
+import { GlobalReqTimeLoggerMiddleware } from './common/middlewares';
 
 @Module({
   imports: [
@@ -18,4 +19,10 @@ import { UsersModule } from './users/users.module';
     UsersModule
   ]
 })
-export class AppModule { }
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(GlobalReqTimeLoggerMiddleware)
+      .forRoutes('*');
+  }
+}

@@ -9,11 +9,11 @@ export class RunnerFactory {
       if (type === ServiceType.MIG) {
         service = new MigrationService();
         await service.execute();
-        console.log('✅ All migrations executed successfully');
+        console.log('🏁 Migrations finished');
       } else if (type === ServiceType.SEED) {
         service = new SeederService();
         await service.execute();
-        console.log('✅ All seeders executed successfully');
+        console.log('🏁 Seeding finished');
       }
       process.exit(0);
     } catch (error) {

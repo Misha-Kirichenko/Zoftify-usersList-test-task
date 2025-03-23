@@ -4,7 +4,6 @@ import { IDatabaseService } from '../interfaces/databaseService.interface';
 import { AbsctractDatabaseService } from './abstractDatabase.service';
 
 export class SeederService extends AbsctractDatabaseService implements IDatabaseService {
-
   public async runAll() {
     try {
       const res = await this.conn.query('SELECT COUNT(*) FROM users');
@@ -27,13 +26,16 @@ export class SeederService extends AbsctractDatabaseService implements IDatabase
           return `(${values.join(",")})`;
         }).join(",");
 
-        await this.conn.query(
+        const { rowCount } = await this.conn.query(
           `INSERT INTO users ("firstName", "lastName", email, password, role) VALUES ${usersQueryString}`,
         );
 
-        console.log('User seeder executed successfully');
+        if (rowCount) {
+          console.log('✅ User seeder executed successfully');
+        }
+
       } else {
-        console.log('Seeder skipped: Test users already exist in the database.');
+        console.log('➡️ Seeder skipped: users already exist in the database.');
       }
     } catch (error) {
       throw new Error(error);
@@ -45,7 +47,7 @@ export class SeederService extends AbsctractDatabaseService implements IDatabase
     try {
       await this.runAll();
     } catch (error) {
-      console.log(error);
+      console.log("❌ Seeding error", error);
     } finally {
       await this.conn.end();
     }
