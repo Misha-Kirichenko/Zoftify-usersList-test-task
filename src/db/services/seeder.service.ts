@@ -11,9 +11,10 @@ export class SeederService extends AbsctractDatabaseService implements IDatabase
       const userCount = parseInt(res.rows[0].count);
       if (!userCount) {
         const password = 'Default_123';
+        const salt = await bcrypt.genSalt(Number(process.env.PASSWORD_SALT_ROUNDS));
         const hashedPassword = await bcrypt.hash(
           password,
-          Number(process.env.PASSWORD_SALT),
+          salt,
         );
 
         const users = [

@@ -4,7 +4,7 @@ import { ITokensPair } from './interfaces';
 import { LoginDTO } from './dto/login.dto';
 import { AuthService } from './auth.service';
 import { CreateAuthDocs } from './docs/controller.decorator';
-import { LOGIN_DECORATORS, REFRESH_DECORATORS } from './docs';
+import { LOGIN_DECORATORS, REFRESH_DECORATORS } from './docs/endpoint-decorators';
 import { RefreshAuthGuard } from './guards/refreshAuth.guard';
 import { IAuthorizedRequest } from 'src/common/interfaces';
 
@@ -16,7 +16,7 @@ export class AuthController {
   @CreateAuthDocs(LOGIN_DECORATORS)
   @Post('/login')
   login(@Body() loginDto: LoginDTO): Promise<ITokensPair> {
-    const {email, password} = loginDto;
+    const { email, password } = loginDto;
     return this.authService.login(email, password);
   }
 

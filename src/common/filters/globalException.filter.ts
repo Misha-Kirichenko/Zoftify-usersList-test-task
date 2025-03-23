@@ -13,7 +13,7 @@ import { HTTP_ERROR_MSG } from '../constants';
 export class GlobalExceptionFilter implements ExceptionFilter {
     constructor(private readonly httpAdapterHost: HttpAdapterHost) { }
 
-    catch(exception: any, host: ArgumentsHost): void {
+    catch(exception: unknown, host: ArgumentsHost): void {
         const { httpAdapter } = this.httpAdapterHost;
         const responseBody = {};
 
@@ -25,18 +25,25 @@ export class GlobalExceptionFilter implements ExceptionFilter {
                 : HttpStatus.BAD_REQUEST;
 
         responseBody["statusCode"] = httpStatus;
+
         if (process.env.NODE_ENV === "development") {
             responseBody["timestamp"] = Date.now();
             responseBody["path"] = httpAdapter.getRequestUrl(ctx.getRequest());
             if (exception instanceof Error) {
-                responseBody["message"] = exception.message;
+                const response = exception instanceof HttpException ? exception.getResponse() : exception.message;
+                responseBody["message"] = response && typeof response === "object" && "message" in response
+                    ? response.message
+                    : response;
+
                 responseBody["stack"] = exception.stack || "No stack available";
             }
         }
         else {
-            responseBody["message"] = exception instanceof HttpException ? exception.message : HTTP_ERROR_MSG.UNCATEGORIZED;
+            const response = exception instanceof HttpException ? exception.getResponse() : HTTP_ERROR_MSG.UNCATEGORIZED;
+            responseBody["message"] = response && typeof response === "object" && "message" in response
+                ? response.message
+                : response;
         }
-
         httpAdapter.reply(ctx.getResponse(), responseBody, httpStatus);
     }
 }

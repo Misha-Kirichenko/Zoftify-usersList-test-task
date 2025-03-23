@@ -11,7 +11,7 @@
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
-    "start:prod": "node dist/main",
+    "prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -20,9 +20,11 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "migrate": "ts-node src/db/scripts/runMigrations.ts",
     "seed": "ts-node src/db/scripts/runSeeders.ts",
-    "i_mig_seed_start": "npm i && npm run migrate && npm run seed && npm run start"
+    "i_mig_seed_start": "npm i && npm run migrate && npm run seed && npm run start",
+    "i_mig_seed_start_prod": "npm ci --omit=dev && npx ts-node src/db/scripts/runMigrations.ts && npx ts-node src/db/scripts/runSeeders.ts && npx @nestjs/cli build && npm run prod"
   },
   "dependencies": {
+    "@nestjs/swagger": "^11.0.7",
     "@nestjs/common": "^11.0.1",
     "@nestjs/core": "^11.0.1",
     "@nestjs/jwt": "^11.0.0",
@@ -37,7 +39,6 @@
     "typeorm": "^0.3.21"
   },
   "devDependencies": {
-    "@nestjs/swagger": "^11.0.7",
     "@eslint/eslintrc": "^3.2.0",
     "@eslint/js": "^9.18.0",
     "@nestjs/cli": "^11.0.0",

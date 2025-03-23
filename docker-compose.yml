@@ -2,16 +2,7 @@ services:
   users-list:
     build: .
     container_name: users-list
-    command:
-      [
-        'wait-for-it',
-        '${POSTGRES_HOST}:${POSTGRES_PORT}',
-        '--',
-        'npm',
-        'run',
-        'i_mig_seed_start',
-      ]
-
+    command: ['/entrypoint.sh']
     depends_on:
       - postgres
     ports:

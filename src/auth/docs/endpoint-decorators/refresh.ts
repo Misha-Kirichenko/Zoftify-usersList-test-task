@@ -3,7 +3,7 @@ import {
   ApiOkResponse,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { TOKENS_PAIR } from './example';
+import { TOKENS_PAIR } from '../example';
 
 export const REFRESH_DECORATORS = [
   ApiBearerAuth(),
@@ -21,7 +21,7 @@ export const REFRESH_DECORATORS = [
             error: 'Unauthorized',
             statusCode: 401,
           },
-          description: 'Unexpected error',
+          description: 'Unauthorized error',
         },
       },
     },

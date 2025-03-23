@@ -10,7 +10,6 @@ export const COMMON_RESPONSES = [
       type: 'object',
       example: {
         message: HTTP_ERROR_MSG.UNCATEGORIZED,
-        error: 'Bad Request',
         statusCode: 400,
       },
       description: 'Unexpected error',
@@ -21,10 +20,9 @@ export const COMMON_RESPONSES = [
       type: 'object',
       example: {
         message: HTTP_ERROR_MSG.CREDENTIALS,
-        error: 'Unauthorized',
         statusCode: 401,
       },
-      description: 'Authorization error',
+      description: 'Unauthorized error',
     },
   })
 ];

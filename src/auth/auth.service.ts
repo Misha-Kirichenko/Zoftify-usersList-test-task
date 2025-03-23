@@ -5,7 +5,7 @@ import {
 import * as bcrypt from 'bcrypt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User } from 'src/user/entities/user.entity';
+import { User } from 'src/users/entities/user.entity';
 import { ITokenPayload, ITokensPair } from './interfaces';
 import { HTTP_ERROR_MSG } from 'src/common/constants/messages.constants';
 import { JwtService } from '@nestjs/jwt';
@@ -20,10 +20,10 @@ export class AuthService {
     ) { }
 
     private async generateTokenPairs(user: User | ITokenPayload): Promise<ITokensPair> {
-        const { id, email } = user;
+        const { id, email, role } = user;
 
         const accessToken = await this.jwtService.signAsync(
-            { id, email },
+            { id, email, role },
             {
                 expiresIn: process.env.ACCESS_TOKEN_EXPIRE_TIME,
                 secret: process.env.ACCESS_TOKEN_SECRET,
@@ -31,7 +31,7 @@ export class AuthService {
         );
 
         const refreshToken = await this.jwtService.signAsync(
-            { id, email },
+            { id, email, role },
             {
                 expiresIn: process.env.REFRESH_TOKEN_EXPIRE_TIME,
                 secret: process.env.REFRESH_TOKEN_SECRET,
@@ -63,8 +63,7 @@ export class AuthService {
     public async generateRefreshToken(
         req: IAuthorizedRequest,
     ): Promise<ITokensPair> {
-        const { id, email } = req.user;
-        const tokensPair = await this.generateTokenPairs({ id, email });
+        const tokensPair = await this.generateTokenPairs(req.user);
         return tokensPair;
     }
 }

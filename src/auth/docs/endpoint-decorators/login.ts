@@ -1,5 +1,5 @@
 import { ApiCreatedResponse } from '@nestjs/swagger';
-import { TOKENS_PAIR } from './example';
+import { TOKENS_PAIR } from '../example';
 import { COMMON_RESPONSES } from 'src/common/constants';
 
 export const LOGIN_DECORATORS = [

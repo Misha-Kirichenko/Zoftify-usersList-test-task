@@ -1,12 +1,11 @@
 import { Module } from '@nestjs/common';
-import { UserModule } from './user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CONFIG } from './db/config';
 import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
-    UserModule,
     TypeOrmModule.forRoot({
       ...CONFIG,
       username: CONFIG.user,
@@ -15,7 +14,8 @@ import { AuthModule } from './auth/auth.module';
       synchronize: false,
       logging: true,
     }),
-    AuthModule
+    AuthModule,
+    UsersModule
   ]
 })
 export class AppModule { }

@@ -2,6 +2,7 @@ import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { GlobalExceptionFilter } from './common/filters/globalException.filter';
+import { SWAGGER_DESC } from './common/constants';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -15,9 +16,7 @@ async function bootstrap() {
     const { DocumentBuilder, SwaggerModule } = await import('@nestjs/swagger');
     const config = new DocumentBuilder()
       .setTitle('UsersList api')
-      .setDescription(
-        'API for CRUDs on users',
-      )
+      .setDescription(SWAGGER_DESC)
       .setVersion('1.0')
       .addBearerAuth()
       .build();
